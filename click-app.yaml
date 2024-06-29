@@ -1,0 +1,32 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: click-deployment
+  labels:
+    app: click-app
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: click-app
+  template:
+    metadata:
+      labels:
+        app: click-app
+    spec:
+      containers:
+        - name: click-app
+          image: bitnami/clickhouse:23.8.15
+          ports:
+          - containerPort: 9000
+          env:
+          - name: CLICKHOUSE_ADMIN_USER
+            valueFrom:
+              secretKeyRef:
+                name: click-secret
+                key: click-user
+          - name: CLICKHOUSE_ADMIN_PASSWORD
+            valueFrom:
+              secretKeyRef:
+                name: click-secret
+                key: click-password
